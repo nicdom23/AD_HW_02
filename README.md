@@ -42,9 +42,52 @@ I manged to implement a naive method to perform the method on non-power-of-2 squ
 -   In `main.c` I rewrote the for-cycle that iterates among the different matrices in order to test even non-power of 2 matrices;
 -  Now the `allocate_matrix` function initializes the matrices to be zero matrices;
 
-Now we have that the non-power-of-2 square matrices of size n become matrices of size 
+Now we have that the non-power-of-2 square matrices of size n become matrices of size $ l = 2 ^ {\lceil\log_2(n)\rceil} $.
 
-$ 2 ^ \ceil{\log_2(n)} $
+It can be easily proven that $ 2 ^ {\lceil\log_2(n)\rceil} \leq 2n$
+- $2 ^ {\lceil\log_2(n)\rceil} \leq 2^{\log_2(n)+1} = 2n$
 
-$2^n$
+So the asymptotic complexity of this method is :
+- $\Theta(l^{\log_2 7}) = \Theta((2n)^{\log_2 7})=\Theta(n^{\log_2 7})$
+So it remains unchanged.
 
+21/04/2020
+
+Now I am trying to change the code in order to multiply non-square matrices.
+I am using the advice of the Q&A session of yesteday.
+- I changed the main.c, test.c files and their headers in order to accustom a triplet on sizes of the matrices: i = rows of A = rows of C, k= columns of A= rows of B, j=columns of B=columns 0f C
+
+-Now strassen's algorithm applies the non-power-of-2 square matrix multiplication to square submatrices of A and B of the same size i.
+
+What are the matrices to multiply and then sum in order to obtain C?
+
+The general rule states that, if A is divided into n square matrices along its rows :$C_{ij} = (A_{i1}B_{1j})+(A_{i2}B_{2j})+(A_{i3}B_{3j})+\cdots +(A_{in}B_{nj})$ 
+
+In our case we have that $n = \lceil \frac{k}{i}\rceil$ and $m =\lceil \frac{j}{i}\rceil $: 
+
+
+
+A=
+\begin{matrix}
+A_{11}&A_{12}&A_{13}&\cdots&A_{1n}
+\end{matrix}
+
+B=
+\begin{matrix}
+B_{11}&B_{12}&\cdots&B_{1m}\\
+B_{21}&B_{22}&\cdots&B_{2m}\\
+\cdots\\
+B_{n1}&B_{n2}&\cdots&B_{nm}
+\end{matrix}
+
+C=
+\begin{matrix}
+C_{11}&C_{12}&\cdots&C_{1m}\\
+\end{matrix}
+
+
+So our case reduces to :
+$C_{1j} = (A_{11}B_{1j})+(A_{12}B_{2j})+(A_{13}B_{3j})+\cdots +(A_{1n}B_{nj})$
+for m matrices $C_{1j}$ 
+
+This is the sum we need to implement in our code.

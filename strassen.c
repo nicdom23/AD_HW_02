@@ -304,17 +304,21 @@ void strassen_aux(float **C, float const *const *const A,
  * easy to use API
  */
 void strassen_matrix_multiplication_square(float **C, float const *const *const A,
-                                    float const *const *const B, size_t n)
+                                    float const *const *const B,
+                                     size_t C_f_row,size_t C_f_col,
+                                     size_t A_f_row,size_t A_f_col,
+                                     size_t B_f_row,size_t B_f_col,
+                                     size_t n)
 {
   size_t new_n = 1;
   while(new_n<n) new_n = new_n*2;
   float ** new_C = allocate_matrix(new_n, new_n);
   float ** new_A = allocate_matrix(new_n, new_n);
   float ** new_B =  allocate_matrix(new_n, new_n);
-  for(size_t i =0;i <n;i++){
+  for(size_t i = 0;i <n;i++){
     for(size_t j = 0; j <n; j++){
-      new_A[i][j] = A[i][j];
-      new_B[i][j] = A[i][j];
+      new_A[i][j] = A[A_f_row + i][A_f_col +j];
+      new_B[i][j] = B[B_f_row +i][B_f_col+j];
     }
     
   }
@@ -327,7 +331,7 @@ void strassen_matrix_multiplication_square(float **C, float const *const *const 
 
   for(size_t i =0 ;i<n;i++){
     for(size_t j = 0; j <n; j++){
-      C[i][j] = new_C[i][j];
+      C[C_f_row+i][C_f_col + j] = C[C_f_row+i][C_f_col + j] + new_C[i][j];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
     
     }
     
@@ -341,7 +345,57 @@ deallocate_matrix(new_A, new_n);
 void strassen_matrix_multiplication(float **C, float const *const *const A,
                                     float const *const *const B, size_t i,size_t k, size_t j)
  {
-   printf("test");
+  
+  size_t n_row_A = i;
+  size_t n_col_A = (k/i+1)*i;
+
+  size_t n_row_B = n_col_A;
+  size_t n_col_B = (j/i+1)*i;
+
+  size_t n_row_C = n_row_A;
+  size_t n_col_C = n_col_B;
+
+
+  float ** new_C = allocate_matrix(n_row_C, n_col_C);
+  float ** new_A = allocate_matrix(n_row_A, n_col_A);
+  float ** new_B =  allocate_matrix(n_row_B, n_col_B);
+  
+  //embed A and B into bigger matrices
+  for(size_t l =0;l <i;l++){
+    for(size_t f = 0; f <k; f++){
+      new_A[l][f] = A[l][f];
+    }
+  }
+
+  for(size_t l =0;l <k;l++){
+    for(size_t f = 0; f <j; f++){
+      new_B[l][f]= B[l][f];
+    }
+  }
+strassen_matrix_multiplication_square(new_C, (float const *const*const ) new_A,(float const *const*const )new_B,
+                                      0,0,
+                                      0,0,
+                                      0,0,
+                                      i);
+                                    
+
+
+
+  
+  for(size_t l =0 ;l<i;l++){
+    for(size_t f = 0; f <j; f++){
+      C[l][f] = new_C[l][f];
+    
+    }
+    
+  }
+  
+
+  
+  deallocate_matrix(new_A, n_row_A);
+  deallocate_matrix(new_B, n_row_B);
+  deallocate_matrix(new_C, n_row_C);
+
 
 
  }                                   

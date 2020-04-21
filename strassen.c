@@ -1,5 +1,5 @@
 #include "matrix.h"
-
+#include <stdio.h>
 /*
  * this function performs the element-wise
  * subtraction of B from A and put the resulting
@@ -86,7 +86,7 @@ void strassen_aux(float **C, float const *const *const A,
                   const size_t B_f_row, const size_t B_f_col,
                   const size_t n)
 {
-    if (n <= (1<<5)) {
+    if (n <= (1<<5)) {//(1<<5)
         naive_aux(C, A, B,
                   C_f_row, C_f_col,
                   A_f_row, A_f_col,
@@ -303,15 +303,50 @@ void strassen_aux(float **C, float const *const *const A,
  * this functions is exclusively meant to provide an
  * easy to use API
  */
-void strassen_matrix_multiplication(float **C, float const *const *const A,
+void strassen_matrix_multiplication_square(float **C, float const *const *const A,
                                     float const *const *const B, size_t n)
 {
+  size_t new_n = 1;
+  while(new_n<n) new_n = new_n*2;
+  float ** new_C = allocate_matrix(new_n, new_n);
+  float ** new_A = allocate_matrix(new_n, new_n);
+  float ** new_B =  allocate_matrix(new_n, new_n);
+  for(size_t i =0;i <n;i++){
+    for(size_t j = 0; j <n; j++){
+      new_A[i][j] = A[i][j];
+      new_B[i][j] = A[i][j];
+    }
+    
+  }
+  
+  strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
+               0, 0,
+               0, 0,
+               0, 0,
+               new_n);
 
-  strassen_aux(C, A, B,
-               0, 0,
-               0, 0,
-               0, 0,
-               n);
-
+  for(size_t i =0 ;i<n;i++){
+    for(size_t j = 0; j <n; j++){
+      C[i][j] = new_C[i][j];
+    
+    }
+    
+  }
+deallocate_matrix(new_A, new_n);
+  deallocate_matrix(new_B, new_n);
+  deallocate_matrix(new_C, new_n);
 }
 
+
+void strassen_matrix_multiplication(float **C, float const *const *const A,
+                                    float const *const *const B, size_t i,size_t k, size_t j)
+ {
+   printf("test");
+
+
+ }                                   
+                                    
+                                    
+                                    
+          
+                                    

@@ -5,15 +5,14 @@
 
 void naive_matrix_multiplication(float **C, float const *const *const A,
                                 float const *const *const B,
-                                const size_t n) 
+                                const size_t i,const size_t k,const size_t j) 
 {
-  for (size_t y = 0; y < n; y++) {
-    for (size_t x = 0; x < n; x++) {
+  for (size_t y = 0; y < i; y++) {
+    for (size_t x = 0; x < j; x++) {
       float value = 0.0;
-      for (size_t z = 0; z < n; z++) {
+      for (size_t z = 0; z < k; z++) {
         value += A[y][z]*B[z][x];
       }
-
       C[y][x] = value;
     }
   }
@@ -38,7 +37,13 @@ float **allocate_matrix(const size_t rows, const size_t cols) {
   for (size_t i = 0; i < rows; i++) {
     M[i] = (float *)malloc(sizeof(float) * cols);
   }
+  for(size_t i = 0; i < rows; i++){
+    for(size_t j = 0; j < cols; j++){
+      M[i][j] = 0;
+    }
 
+
+  }
   return M;
 }
 

@@ -3,7 +3,7 @@
 
 void naive_matrix_multiplication(float **C, float const *const *const A,
                                 float const *const *const B,
-                                const size_t n);
+                                const size_t i,const size_t k,const size_t j);
 
 int same_matrix(float const *const *const A, float const *const *const B,
                 const size_t rows, const size_t cols);

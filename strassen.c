@@ -372,12 +372,18 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
       new_B[l][f]= B[l][f];
     }
   }
-strassen_matrix_multiplication_square(new_C, (float const *const*const ) new_A,(float const *const*const )new_B,
-                                      0,0,
-                                      0,0,
-                                      0,0,
-                                      i);
                                     
+  for (size_t f = 0 ;f<n_col_C; f = f+i){
+    for (size_t l = 0;l<n_col_A; l = l+i){
+      
+         strassen_matrix_multiplication_square(new_C, (float const *const*const ) new_A,(float const *const*const )new_B,
+                                            0,f,
+                                               0,l,
+                                              l,f,
+                                               i);
+    }
+    
+  }                         
 
 
 

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "matrix.h"
-
 void naive_matrix_multiplication(float **C, float const *const *const A,
                                 float const *const *const B,
                                 const size_t i,const size_t k,const size_t j) 
@@ -30,7 +29,7 @@ int same_matrix(float const *const *const A, float const *const *const B,
 
   return 1;
 }
-
+static size_t memory_usage = 0;
 float **allocate_matrix(const size_t rows, const size_t cols) {
   float **M = (float **)malloc(sizeof(float *) * rows);
 
@@ -41,10 +40,16 @@ float **allocate_matrix(const size_t rows, const size_t cols) {
     for(size_t j = 0; j < cols; j++){
       M[i][j] = 0;
     }
-
+   
 
   }
+  memory_usage = memory_usage + sizeof(float*) * rows + rows*sizeof(float) * cols;
   return M;
+}
+
+size_t give_memory_usage(){
+
+  return memory_usage;
 }
 
 void deallocate_matrix(float **A, const size_t rows) {

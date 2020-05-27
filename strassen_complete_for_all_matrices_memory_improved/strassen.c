@@ -342,15 +342,17 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
   
  //Perform the matrix multiplications between square matrices                              
   for (size_t f = 0 ;f<n_col_C; f = f+n_row_A){
+    
     for (size_t l = 0;l<n_col_A; l = l+n_row_A){
-    int q=C[0][f];
-    q=A[0][l];
-     /* strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
+    int q=new_C[0+n_row_A][f+n_row_A];
+    q=new_A[0+n_row_A][l+n_row_A];
+    q = new_B[l+n_row_A][f+n_row_A];
+      strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
                0, f,
                0, l,
                l, f,
-               n_col_A);
-    */
+               n_row_A);
+    
     }
   } 
   /*       

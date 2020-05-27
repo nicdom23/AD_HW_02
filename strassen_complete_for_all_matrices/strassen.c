@@ -65,7 +65,6 @@ void naive_aux(float **C, float const *const *const A,
       for (size_t z = 0; z < n; z++) {
         value += A[y + A_f_row][z + A_f_col]*B[z + B_f_row][x + B_f_col];
       }
-
       C[y + C_f_row][x + C_f_col] = value;
     }
   }
@@ -303,6 +302,7 @@ void strassen_aux(float **C, float const *const *const A,
  * this functions is exclusively meant to provide an
  * easy to use API
  */
+//Notice: this could be used to solve non-power-of-2 sized square matrices
 void strassen_matrix_multiplication_square(float **C, float const *const *const A,
                                     float const *const *const B,
                                      size_t C_f_row,size_t C_f_col,
@@ -312,9 +312,11 @@ void strassen_matrix_multiplication_square(float **C, float const *const *const 
 {
   size_t new_n = 1;
   while(new_n<n) new_n = new_n*2;
+  //create new matrices
   float ** new_C = allocate_matrix(new_n, new_n);
   float ** new_A = allocate_matrix(new_n, new_n);
-  float ** new_B =  allocate_matrix(new_n, new_n);
+  float ** new_B = allocate_matrix(new_n, new_n);
+  //embed the input matrices into bigger matrices
   for(size_t i = 0;i <n;i++){
     for(size_t j = 0; j <n; j++){
       new_A[i][j] = A[A_f_row + i][A_f_col +j];
@@ -322,7 +324,7 @@ void strassen_matrix_multiplication_square(float **C, float const *const *const 
     }
     
   }
-  
+  //use the original Strassen method on the now square matrices that have a size corresponding to a power of two
   strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
                0, 0,
                0, 0,
@@ -332,11 +334,11 @@ void strassen_matrix_multiplication_square(float **C, float const *const *const 
   for(size_t i =0 ;i<n;i++){
     for(size_t j = 0; j <n; j++){
       C[C_f_row+i][C_f_col + j] = C[C_f_row+i][C_f_col + j] + new_C[i][j];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
-    
     }
     
   }
-deallocate_matrix(new_A, new_n);
+  //free the memory
+  deallocate_matrix(new_A, new_n);
   deallocate_matrix(new_B, new_n);
   deallocate_matrix(new_C, new_n);
 }
@@ -355,7 +357,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
   size_t n_row_C = n_row_A;
   size_t n_col_C = n_col_B;
 
-
+  //create new matrices
   float ** new_C = allocate_matrix(n_row_C, n_col_C);
   float ** new_A = allocate_matrix(n_row_A, n_col_A);
   float ** new_B =  allocate_matrix(n_row_B, n_col_B);
@@ -372,41 +374,28 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
       new_B[l][f]= B[l][f];
     }
   }
-                                    
+  
+ //Perform the matrix multiplications between square matrices                              
   for (size_t f = 0 ;f<n_col_C; f = f+i){
     for (size_t l = 0;l<n_col_A; l = l+i){
-      
          strassen_matrix_multiplication_square(new_C, (float const *const*const ) new_A,(float const *const*const )new_B,
-                                            0,f,
+                                               0,f,
                                                0,l,
-                                              l,f,
+                                               l,f,
                                                i);
     }
-    
-  }                         
-
-
-
-  
+  }        
+  //retrieve C                 
   for(size_t l =0 ;l<i;l++){
     for(size_t f = 0; f <j; f++){
-      C[l][f] = new_C[l][f];
-    
+      C[l][f] = new_C[l][f]; 
     }
-    
   }
-  
-
-  
+  //free the memory
   deallocate_matrix(new_A, n_row_A);
   deallocate_matrix(new_B, n_row_B);
   deallocate_matrix(new_C, n_row_C);
-
-
-
  }                                   
                                     
                                     
-                                    
-          
                                     

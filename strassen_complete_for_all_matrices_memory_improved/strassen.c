@@ -302,57 +302,17 @@ void strassen_aux(float **C, float const *const *const A,
  * this functions is exclusively meant to provide an
  * easy to use API
  */
-//Notice: this could be used to solve non-power-of-2 sized square matrices
-void strassen_matrix_multiplication_square(float **C, float const *const *const A,
-                                    float const *const *const B,
-                                     size_t C_f_row,size_t C_f_col,
-                                     size_t A_f_row,size_t A_f_col,
-                                     size_t B_f_row,size_t B_f_col,
-                                     size_t n)
-{
-  size_t new_n = 1;
-  while(new_n<n) new_n = new_n*2;
-  //create new matrices
-  float ** new_C = allocate_matrix(new_n, new_n);
-  float ** new_A = allocate_matrix(new_n, new_n);
-  float ** new_B = allocate_matrix(new_n, new_n);
-  //embed the input matrices into bigger matrices
-  for(size_t i = 0;i <n;i++){
-    for(size_t j = 0; j <n; j++){
-      new_A[i][j] = A[A_f_row + i][A_f_col +j];
-      new_B[i][j] = B[B_f_row +i][B_f_col+j];
-    }
-    
-  }
-  //use the original Strassen method on the now square matrices that have a size corresponding to a power of two
-  strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
-               0, 0,
-               0, 0,
-               0, 0,
-               new_n);
-
-  for(size_t i =0 ;i<n;i++){
-    for(size_t j = 0; j <n; j++){
-      C[C_f_row+i][C_f_col + j] = C[C_f_row+i][C_f_col + j] + new_C[i][j];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
-    }
-    
-  }
-  //free the memory
-  deallocate_matrix(new_A, new_n);
-  deallocate_matrix(new_B, new_n);
-  deallocate_matrix(new_C, new_n);
-}
-
 
 void strassen_matrix_multiplication(float **C, float const *const *const A,
                                     float const *const *const B, size_t i,size_t k, size_t j)
  {
   
-  size_t n_row_A = i;
-  size_t n_col_A = (k/i+1)*i;
+  size_t n_row_A = 1;
+  while(n_row_A<i) n_row_A = n_row_A*2;
+  size_t n_col_A = (k/n_row_A+1)*n_row_A;
 
   size_t n_row_B = n_col_A;
-  size_t n_col_B = (j/i+1)*i;
+  size_t n_col_B = (j/n_row_A+1)*n_row_A;
 
   size_t n_row_C = n_row_A;
   size_t n_col_C = n_col_B;
@@ -363,29 +323,45 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
   float ** new_B =  allocate_matrix(n_row_B, n_col_B);
   
   //embed A and B into bigger matrices
-  for(size_t l =0;l <i;l++){
-    for(size_t f = 0; f <k; f++){
-      new_A[l][f] = A[l][f];
+  for(size_t g = 0;g<(k/n_row_A);g ++){
+    for(size_t l =0;l <i;l++){
+      for(size_t f = 0; f <i; f++){ 
+          new_A[l][g*n_row_A+f] = A[l][f];
+       }
     }
   }
-
+  for(size_t h = 0;h<(j/n_row_A);h++){
+  for(size_t g = 0;g<(k/n_row_A);g++){
   for(size_t l =0;l <k;l++){
     for(size_t f = 0; f <j; f++){
-      new_B[l][f]= B[l][f];
+      new_B[l+g*n_row_A][f+h*n_row_A]= B[l][f];
     }
+  }
+  }
   }
   
  //Perform the matrix multiplications between square matrices                              
-  for (size_t f = 0 ;f<n_col_C; f = f+i){
-    for (size_t l = 0;l<n_col_A; l = l+i){
-         strassen_matrix_multiplication_square(new_C, (float const *const*const ) new_A,(float const *const*const )new_B,
-                                               0,f,
-                                               0,l,
-                                               l,f,
-                                               i);
+  for (size_t f = 0 ;f<n_col_C; f = f+n_row_A){
+    for (size_t l = 0;l<n_col_A; l = l+n_row_A){
+    int q=C[0][f];
+    q=A[0][l];
+     /* strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
+               0, f,
+               0, l,
+               l, f,
+               n_col_A);
+    */
     }
-  }        
-  //retrieve C                 
+  } 
+  /*       
+  //retrieve C 
+    for(size_t i =0 ;i<n;i++){
+    for(size_t j = 0; j <n; j++){
+      C[C_f_row+i][C_f_col + j] = C[C_f_row+i][C_f_col + j] + new_C[i][j];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
+    }
+    
+  }
+  */                
   for(size_t l =0 ;l<i;l++){
     for(size_t f = 0; f <j; f++){
       C[l][f] = new_C[l][f]; 

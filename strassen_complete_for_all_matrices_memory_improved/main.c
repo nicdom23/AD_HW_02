@@ -6,9 +6,9 @@
 
 int main(int argc, char *argv[]) {
   //the custom matrix has size
-  size_t i = 5;
-  size_t k = 25;
-  size_t j = 100;
+  size_t i = 125;
+  size_t k = 250;
+  size_t j = 200;
   
   
   float **A = allocate_random_matrix(i, k);

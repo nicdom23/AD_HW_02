@@ -323,23 +323,25 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
   float ** new_B =  allocate_matrix(n_row_B, n_col_B);
   
   //embed A and B into bigger matrices
-  for(size_t g = 0;g<(k/n_row_A);g ++){
+  for(size_t g = 0;g<(k/n_row_A+1);g ++){
     for(size_t l =0;l <i;l++){
       for(size_t f = 0; f <i; f++){ 
-          new_A[l][g*n_row_A+f] = A[l][f];
+          new_A[l][g*n_row_A+f] = A[l][f+g*i];
        }
     }
   }
-  for(size_t h = 0;h<(j/n_row_A);h++){
-  for(size_t g = 0;g<(k/n_row_A);g++){
-  for(size_t l =0;l <k;l++){
-    for(size_t f = 0; f <j; f++){
-      new_B[l+g*n_row_A][f+h*n_row_A]= B[l][f];
+  
+  for(size_t h = 0;h<(j/n_row_A+1);h++){
+  for(size_t g = 0;g<(k/n_row_A+1);g++){
+    for(size_t l =0;l <i;l++){
+      for(size_t f = 0; f <i; f++){
+        new_B[l+g*n_row_A][f+h*n_row_A]= B[l+g*i][f+h*i];
     }
   }
   }
   }
   
+  /*
  //Perform the matrix multiplications between square matrices                              
   for (size_t f = 0 ;f<n_col_C; f = f+n_row_A){
     
@@ -363,12 +365,30 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
     }
     
   }
-  */                
+                
   for(size_t l =0 ;l<i;l++){
     for(size_t f = 0; f <j; f++){
       C[l][f] = new_C[l][f]; 
     }
   }
+   */
+
+    for(size_t l =0;l <n_row_C;l++){
+      printf(">");
+      for(size_t f = 0; f <n_col_C; f++){ 
+          printf("|%f",new_C[l][f]);
+       }
+       printf("\n");
+    }
+    printf("\n");
+    for(size_t l =0;l <i;l++){
+      printf(">");
+      for(size_t f = 0; f <j; f++){ 
+          printf("|%f",C[l][f]);
+       }
+       printf("\n");
+    }
+    printf("\n");
   //free the memory
   deallocate_matrix(new_A, n_row_A);
   deallocate_matrix(new_B, n_row_B);

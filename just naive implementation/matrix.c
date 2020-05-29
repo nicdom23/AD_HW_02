@@ -12,6 +12,8 @@ void naive_matrix_multiplication(float **C, float const *const *const A,
       float value = 0.0;
       for (size_t z = 0; z < k; z++) {
         value += A[y][z]*B[z][x];
+        if(y == i-1 && x == j-1)
+        printf("value: %f --" , value);
       }
       C[y][x] = value;
     }
@@ -63,7 +65,7 @@ float **allocate_random_matrix(const size_t rows, const size_t cols) {
   srand(10);
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < cols; j++) {
-      A[i][j] = i+j+1;//(rand() - RAND_MAX / 2) % 5;
+      A[i][j] = (rand() - RAND_MAX / 2) % 5;//i+j+1;//
     }
   }
 

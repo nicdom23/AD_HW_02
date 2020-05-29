@@ -142,18 +142,10 @@ The results are
         121,241,193 	0.013174       	  0.019338	       1
         126,251,201 	0.012777       	  0.013913	       1
               
-. 
+
 - Strassen's algorithm is slower than the naive one, I assume it's because of memory allocation times;
 
 - The matrix multiplication gives however the same result in both cases, so the code makes a correct multiplication;
 
 Having said that I conclude the exercise 1. and I will pass to the next one, where I will discuss the memory issues.
----------------------------------------------------------
-29/05/2020
-
-By studying the next exercise I found out that the output is not correct when $i = k= j = 256$. I will try now to solve this problem, since it seems to have affected the second exercise as well.
-
--  the output is correct when $i = k = j =128$
--  the only error is the element $c_{i,j} $ that should be 39048576 but instead is 39048524. NOTE: the implemented Strassen algorithm gives instead the correct answer. So the issue is of the naive implementation.
-- There is in fact a logical error in the function ''naive_matrix_multiplication''
 

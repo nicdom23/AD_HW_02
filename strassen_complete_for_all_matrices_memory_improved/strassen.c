@@ -344,26 +344,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
             new_A[l][f] = A[l][f];
         }
     }
-  /*
-  //embed A and B into bigger matrices
-  for(size_t g = 0;g<(k/i+1);g++){
-    //printf("g = %ld",g);
-    for(size_t l =0;l <i;l++){
-      if(i<k)
-        for(size_t f = 0; f <i; f++){ 
-            if(f+g*i<k)
-            new_A[l][g*n_row_A+f] = A[l][f+g*i];
-        }
-      else
-        for(size_t f = 0; f <k; f++){
-            if(f+g*i<k) 
-            new_A[l][g*n_row_A+f] = A[l][f+g*i];
-        }
-     
-    }
-  }
-  */
- /*
+    /*
      printf("\n MATRIX A \n");
     for(size_t l =0;l <n_row_A;l++){
       printf(">");
@@ -374,52 +355,6 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
     }
     printf("\n");
     */
-  /*
-  for(size_t h = 0;h<(j/i+1);h++){
-    //printf("\n h = %ld,..,%ld\n",h,j/i+1);
-    for(size_t g = 0;g<(k/i+1);g++){
-          //printf("\n g = %ld,...,%ld\n",g,(k/i+1));
-          if (i<=k && i<=j){
-            printf("\nCASE 1\n");
-            for(size_t l =0;l <i;l++){
-              for(size_t f = 0; f <i; f++){
-                if(l+g*i<k && f+h*i<j)
-                  new_B[l+g*n_row_A][f+h*n_row_A] = B[l+g*i][f+h*i];
-                }
-              }
-          }else if(k<=i && j<=i){
-            printf("\nCASE 2\n");
-              for(size_t l =0;l <k;l++){
-                  for(size_t f = 0; f <j; f++){
-                    if(l+g*i<k && f+h*i<j)
-                      new_B[l+g*n_row_A][f+h*n_row_A]= B[l+g*i][f+h*i];
-                  }
-                }
-
-          }else if(i<=k && j<=i){
-            printf("\nCASE 3\n");
-            for(size_t l =0;l <i;l++){
-                  for(size_t f = 0; f <j; f++){
-                    if(l+g*i<k && f+h*i<j)
-                      new_B[l+g*n_row_A][f+h*n_row_A]= B[l+g*i][f+h*i];
-                  }
-                }
-
-          }else if(k<=i && i<=j){
-            printf("\nCASE 4\n");
-            for(size_t l =0;l <k;l++){
-                  for(size_t f = 0; f <i; f++){
-                    if(l+g*i<k && f+h*i<j)
-                      new_B[l+g*n_row_A][f+h*n_row_A]= B[l+g*i][f+h*i];
-                  }
-                }
-
-          }else{printf("NO CODE");}
-          
-    }
-  }
-   */
-  /*
     for(size_t l =0;l <k;l++){
         for(size_t f = 0; f <j; f++){ 
             new_B[l][f] = B[l][f];
@@ -427,7 +362,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
     }
   
 
-
+    /*
      printf("\n MATRIX B \n");
     for(size_t l =0;l <n_row_B;l++){
       printf(">");
@@ -438,10 +373,10 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
     }
     printf("\n");
     
-
+   */
 
   
-  
+
 
  //Perform the matrix multiplications between square matrices                              
   for (size_t f = 0 ;f<(j/n_row_A+1); f++){
@@ -451,48 +386,28 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
                0, 0,
                0, l*n_row_A,
                l*n_row_A, f*n_row_A,
-               n_row_A);
-*/
-      /*
-      for(size_t g =0 ;g<i;g++){
-       for(size_t h = 0; h <i; h++){
-          if(f*n_row_A+h<j){
-           //float v =  new_C[g][h];
-           float v = 1;}
-             //C[g][f*n_row_A+h] = C[g][f*i + h] + new_C[g][f];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
-            
-      }
-    
-      }
-      */
-     /*
-    for(size_t g =0 ;g<i;g++){
-       for(size_t h = 0; h <j; h++){
-          if(f*i + h < j)
-           C[g][f*i + h] = C[g][f*i + h] + new_C[g][h];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
-      }
-    
-      }*/
-      /*
-      for(size_t g =0 ;g<n_row_C;g++){
+               n_row_A);  
+       for(size_t g =0 ;g<n_row_C;g++){
        for(size_t h = 0; h <n_row_C; h++){
-      
+          if ( f*n_row_A + h < n_col_C)
            new_C_2[g][f*n_row_A + h] = new_C_2[g][f*n_row_A + h] + new_C[g][h];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
       }
     
       }
-    }
-  } 
-    */ 
-  //retrieve C 
+      
+      
+      }
     
-    /*          
+      }
+     
+  
+  //retrieve C 
+            
   for(size_t l =0 ;l<i;l++){
     for(size_t f = 0; f <j; f++){
-      C[l][f] = new_C[l][f]; 
+      C[l][f] = new_C_2[l][f]; 
     }
   }
-   */
   /*
   printf("MATRIX C");
     for(size_t l =0;l <n_row_C;l++){
@@ -540,17 +455,17 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
        printf("\n");
     }
     printf("\n");*/
-    //printf("\n i = %ld , C(1,1) = %f \n",i,C[0][0]);
-    /*
-    for(size_t l =0;l <n_row_C;l++){
+    printf("\n i = %ld , C(1,1) = %f \n",i,C[0][0]);
+    printf("\n MATRIX C \n") ;
+    for(size_t l =0;l <i;l++){
       printf(">");
-      for(size_t f = 0; f <n_col_C; f++){ 
-          printf("|%f",new_C_2[l][f]);
+      for(size_t f = 0; f <j; f++){ 
+          printf("|%f",C[l][f]);
        }
        printf("\n");
     }
     printf("\n");
-    */
+  
   //free the memory
   deallocate_matrix(new_A, n_row_A);
   deallocate_matrix(new_B, n_row_B);

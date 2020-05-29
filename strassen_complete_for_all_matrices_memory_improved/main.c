@@ -7,10 +7,10 @@
 int main(int argc, char *argv[]) {
   //the custom matrix has size
 
-  size_t i = 125;
+  size_t i = 256;
   //for (size_t i = 9;i<15;i++){
-  size_t k = 250;
-  size_t j = 200;
+  size_t k = 256;
+  size_t j = 256;
   
   
   float **A = allocate_random_matrix(i, k);

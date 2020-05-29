@@ -66,9 +66,7 @@ void naive_aux(float **C, float const *const *const A,
       float value = 0.0;
       for (size_t z = 0; z < n; z++) {
         value += A[y + A_f_row][z + A_f_col]*B[z + B_f_row][x + B_f_col];
-        if(y==n-2 && x == n-2)
-          printf(" value: %f  added %f --",value,A[y + A_f_row][z + A_f_col]*B[z + B_f_row][x + B_f_col]);
-      }
+        }
       C[y + C_f_row][x + C_f_col] = value;
     }
   }
@@ -380,15 +378,15 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
     
    */
 
-  strassen_aux(C,(float const *const *const)  A,(float const *const *const)  B,
+  /*strassen_aux(C,(float const *const *const)  A,(float const *const *const)  B,
                0, 0,
                0, 0,
                0, 0,
                n_row_A);
-
+*/
 
  //Perform the matrix multiplications between square matrices                              
-  /*for (size_t f = 0 ;f<(j/n_row_A+1); f++){
+  for (size_t f = 0 ;f<(j/n_row_A+1); f++){
     for (size_t l = 0;l<(k/n_row_A+1); l++){
       printf ("\n \n Iteration: %ld  %ld \n\n",f,l);
       strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
@@ -403,7 +401,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
               printf("\nMATRIX B\n");
                 print_matrix(new_B,l*n_row_A,f*n_row_A,n_row_A,n_row_A);  
               */
-               /*
+               
                printf("\nMATRIX C\n");
                 print_matrix(new_C,0,0,n_row_A,n_row_A);  
                 }
@@ -420,16 +418,16 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
       }
     
       }
-    */ 
+    
   
   //retrieve C 
-    /*        
+           
   for(size_t l =0 ;l<i;l++){
     for(size_t f = 0; f <j; f++){
       C[l][f] = new_C_2[l][f]; 
     }
   }
-  */
+  
   printf("\nMATRIX C FINAL\n");
                 print_matrix(C,0,0,i,j); 
   /*

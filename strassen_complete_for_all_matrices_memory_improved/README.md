@@ -29,4 +29,29 @@ The memory usage is around 7 MB. We implemented a lot of matrices during every s
 
 ---------------------------------
 
+The matrices are allocated at three points:
 
+- To embed A and B into matrices made of blocks of dimension ixi
+- To embed the blocks of dimension ixi of the previous point into blocks whose dimensions are powers of two
+- To memorize the S and P matrices to compute Strassen's method
+
+We will assume that the input matrices are given: an even better approach would be possible if the creation of the matrices A and B was made by receiving their dimension as an input at the execution. We could directly create A and B to be already viable for the original Strassen method. But this is unrealistic so we will assume that the matrices A and B are already present in memory and of course C will be created of the dimensions that are defined by the product and must be present in memory at the end of the matrix multiplication.
+
+- So it is unavoidable to allocate A, B and C
+
+Since the Strassen algorithm works on matrices, then matrices must be its input, and as we saw on Exercise 1. they must be square and have dimension equal to a power of 2.
+
+- We need at least to allocate two other matrices to embed A and B in order to operate the Strassen algorithm
+
+We could combine the first and second point above to create three matrices that embed A, B and C that are directly made of blocks that are square blocks and have dimension that is a power of 2.
+
+--------------------------------------------------------------
+29/05/2020 
+I have made the correction explained in the previous README.
+The code has been tested, I made a correction for when k and j are multiples of n_row_A.
+Now to see how much memory we have saved.
+The result is:
+
+        nd23@nd23-VirtualBox:~/Adv_algorithms/AD_HW_02/strassen_complete_for_all_matrices_memory_improved$ ./strassen_test
+        n            Strassen's Alg.    Naive Alg.   Same result  , memory usage
+        125,250,200     0.016631        0.009019        1           4345424 bytes

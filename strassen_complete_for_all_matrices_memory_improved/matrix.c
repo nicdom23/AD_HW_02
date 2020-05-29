@@ -22,13 +22,8 @@ int same_matrix(float const *const *const A, float const *const *const B,
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < cols; j++) {
       if (A[i][j] != B[i][j]) {
-        printf("|false");
         return 0;
-      }else{
-          //printf("|true ");
-
       }
-      //printf("\n");
     }
   }
 
@@ -72,7 +67,7 @@ float **allocate_random_matrix(const size_t rows, const size_t cols) {
   srand(10);
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < cols; j++) {
-      A[i][j] =  (rand() - RAND_MAX / 2) % 5;//j+i+1 ;
+      A[i][j] =  (rand() - RAND_MAX / 2) % 5;
     }
   }
 

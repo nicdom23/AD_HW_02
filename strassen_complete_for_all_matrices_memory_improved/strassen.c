@@ -328,9 +328,12 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
 
   //create new matrices
   
-  //float ** new_C = allocate_matrix(n_row_A, n_row_A);
+  float ** new_C = allocate_matrix(n_row_C, n_col_C);
+  float ** new_C_2 = allocate_matrix(n_row_C, n_col_C);
+  
   float ** new_A = allocate_matrix(n_row_A, n_col_A);
   float ** new_B =  allocate_matrix(n_row_B, n_col_B);
+
   
   //embed A and B into bigger matrices
   for(size_t g = 0;g<(k/i+1);g++){
@@ -338,33 +341,33 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
     for(size_t l =0;l <i;l++){
       if(i<k)
         for(size_t f = 0; f <i; f++){ 
+            if(f+g*i<k)
             new_A[l][g*n_row_A+f] = A[l][f+g*i];
         }
       else
-        for(size_t f = 0; f <k; f++){ 
+        for(size_t f = 0; f <k; f++){
+            if(f+g*i<k) 
             new_A[l][g*n_row_A+f] = A[l][f+g*i];
         }
      
     }
   }
-  
-  for(size_t l =0;l <k;l++){
+     printf("\n MATRIX A \n");
+    for(size_t l =0;l <n_row_A;l++){
       printf(">");
-      for(size_t f = 0; f <j; f++){ 
-          printf("|%f",B[l][f]);
+      for(size_t f = 0; f <n_col_A; f++){ 
+          printf("|%f",new_A[l][f]);
        }
        printf("\n");
     }
     printf("\n");
-  
-  
-
+    
   
   for(size_t h = 0;h<(j/i+1);h++){
     //printf("\n h = %ld,..,%ld\n",h,j/i+1);
     for(size_t g = 0;g<(k/i+1);g++){
           //printf("\n g = %ld,...,%ld\n",g,(k/i+1));
-          if (i<k && i<j){
+          if (i<=k && i<=j){
             printf("\nCASE 1\n");
             for(size_t l =0;l <i;l++){
               for(size_t f = 0; f <i; f++){
@@ -372,7 +375,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
                   new_B[l+g*n_row_A][f+h*n_row_A] = B[l+g*i][f+h*i];
                 }
               }
-          }else if(k<i && j<i){
+          }else if(k<=i && j<=i){
             printf("\nCASE 2\n");
               for(size_t l =0;l <k;l++){
                   for(size_t f = 0; f <j; f++){
@@ -381,7 +384,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
                   }
                 }
 
-          }else if(i<k && j<i){
+          }else if(i<=k && j<=i){
             printf("\nCASE 3\n");
             for(size_t l =0;l <i;l++){
                   for(size_t f = 0; f <j; f++){
@@ -390,7 +393,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
                   }
                 }
 
-          }else if(k<i && i<j){
+          }else if(k<=i && i<=j){
             printf("\nCASE 4\n");
             for(size_t l =0;l <k;l++){
                   for(size_t f = 0; f <i; f++){
@@ -403,8 +406,8 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
           
     }
   }
-  
-for(size_t l =0;l <n_row_B;l++){
+     printf("\n MATRIX B \n");
+    for(size_t l =0;l <n_row_B;l++){
       printf(">");
       for(size_t f = 0; f <n_col_B; f++){ 
           printf("|%f",new_B[l][f]);
@@ -412,58 +415,48 @@ for(size_t l =0;l <n_row_B;l++){
        printf("\n");
     }
     printf("\n");
-   
-   
-    printf("\n DONE \n");
+    
 
-  /*
-  or(size_t l =0;l <n_row_A;l++){
-      printf(">");
-      for(size_t f = 0; f <n_row_A; f++){ 
-          printf("|%f",new_C[l][f]);
-       }
-       printf("\n");
-    }
-    printf("\n");
-    for(size_t l =0;l <i;l++){
-      printf(">");
-      for(size_t f = 0; f <j; f++){ 
-          printf("|%f",C[l][f]);
-       }
-       printf("\n");
-    }
-    printf("\n");
-  */
+
+  
+  
 
  //Perform the matrix multiplications between square matrices                              
-  /*for (size_t f = 0 ;f<(j/n_row_A+1); f++){
-    
+  for (size_t f = 0 ;f<(j/n_row_A+1); f++){
     for (size_t l = 0;l<(k/n_row_A+1); l++){
-   
       strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
-               0, 0,
+               0, f*n_row_C,
                0, l*n_row_A,
                l*n_row_A, f*n_row_A,
                n_row_A);
-    //for(size_t g =0 ;g<i;g++){
-    //for(size_t h = 0; h <j; h++){
-     // C[g][f*i + h] = C[g][f*i + h] + new_C[g][h];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
-      //}
+      for(size_t g =0 ;g<n_row_C;g++){
+       for(size_t h = 0; h <n_col_A; h++){
+          if(f*n_row_A+h < n_col_C)
+           new_C_2[g+l*n_row_A][f*n_row_A+h] = new_C_2[g+l*n_row_A][f*i + h] + new_C[g][f*n_row_A+h];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
+      }
     
-    //s}
+      }
+    /*for(size_t g =0 ;g<i;g++){
+       for(size_t h = 0; h <j; h++){
+          if(f*i + h < j)
+           C[g][f*i + h] = C[g][f*i + h] + new_C[g][h];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
+      }
+    
+      }
+      */
     }
   } 
-  /*       
+     
   //retrieve C 
     
-                
+      /*          
   for(size_t l =0 ;l<i;l++){
     for(size_t f = 0; f <j; f++){
       C[l][f] = new_C[l][f]; 
     }
   }
    */
-/*
+   /*
     for(size_t l =0;l <n_row_A;l++){
       printf(">");
       for(size_t f = 0; f <n_row_A; f++){ 
@@ -472,10 +465,31 @@ for(size_t l =0;l <n_row_B;l++){
        printf("\n");
     }
     printf("\n");
-    for(size_t l =0;l <i;l++){
+    */
+   /*
+   for(size_t l =0;l <i;l++){
+      printf(">");
+      for(size_t f = 0; f <k; f++){ 
+          printf("|%f",A[l][f]);
+       }
+       printf("\n");
+    }
+    printf("\n");
+    
+   for(size_t l =0;l <k;l++){
       printf(">");
       for(size_t f = 0; f <j; f++){ 
-          printf("|%f",C[l][f]);
+          printf("|%f",B[l][f]);
+       }
+       printf("\n");
+    }
+    printf("\n");*/
+    printf("\n i = %ld , C(1,1) = %f \n",i,new_C_2[0][0]);
+    /*
+    for(size_t l =0;l <n_row_C;l++){
+      printf(">");
+      for(size_t f = 0; f <n_col_C; f++){ 
+          printf("|%f",new_C_2[l][f]);
        }
        printf("\n");
     }
@@ -484,7 +498,8 @@ for(size_t l =0;l <n_row_B;l++){
   //free the memory
   deallocate_matrix(new_A, n_row_A);
   deallocate_matrix(new_B, n_row_B);
-  //deallocate_matrix(new_C, n_row_A);
+  deallocate_matrix(new_C, n_row_C);
+  deallocate_matrix(new_C_2, n_row_C);
  }                                   
                                     
                                     

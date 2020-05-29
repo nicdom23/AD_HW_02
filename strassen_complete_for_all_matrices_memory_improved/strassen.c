@@ -66,6 +66,8 @@ void naive_aux(float **C, float const *const *const A,
       float value = 0.0;
       for (size_t z = 0; z < n; z++) {
         value += A[y + A_f_row][z + A_f_col]*B[z + B_f_row][x + B_f_col];
+        if(y==n-2 && x == n-2)
+          printf(" value: %f  added %f --",value,A[y + A_f_row][z + A_f_col]*B[z + B_f_row][x + B_f_col]);
       }
       C[y + C_f_row][x + C_f_col] = value;
     }

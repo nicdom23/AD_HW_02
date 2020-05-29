@@ -7,10 +7,10 @@
 int main(int argc, char *argv[]) {
   //the custom matrix has size
 
-  size_t i = 11;
-  for (size_t i = 10;i<11;i++){
-  size_t k = 11;
-  size_t j = 5;
+  size_t i = 10;
+  //for (size_t i = 9;i<15;i++){
+  size_t k = 5;
+  size_t j = 32;
   
   
   float **A = allocate_random_matrix(i, k);
@@ -39,6 +39,6 @@ int main(int argc, char *argv[]) {
   deallocate_matrix(B, k);
   deallocate_matrix(C0, i);
   deallocate_matrix(C1, i);
-  }
+  //}
   return 0;
 }

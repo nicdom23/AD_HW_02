@@ -309,14 +309,14 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
   //printf("i : %ld, k = %ld, j = %ld\n",i,k,j);
   size_t n_row_A = 1;
   while(n_row_A<i) n_row_A = n_row_A*2;
-  size_t n_col_A = (k/i+1)*n_row_A;
+  size_t n_col_A = (k/n_row_A+1)*n_row_A;
   if (k == n_row_A*(k/n_row_A)){
       n_col_A = n_row_A*(k/n_row_A);
   }
     printf("result: %ld %ld\n",(k/n_row_A+1),(k/n_row_A+1)*n_row_A);
     printf("rows = %ld, columns = %ld \n",n_row_A,n_col_A);
     size_t n_row_B = n_col_A;
-    size_t n_col_B = (j/i+1)*n_row_A;
+    size_t n_col_B = (j/n_row_A+1)*n_row_A;
     if (j == n_row_A*(j/n_row_A))
       n_col_B = n_row_A*(j/n_row_A);
     
@@ -328,13 +328,23 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
 
   //create new matrices
   
-  float ** new_C = allocate_matrix(n_row_C, n_col_C);
+  float ** new_C = allocate_matrix(n_row_A, n_row_A);
   float ** new_C_2 = allocate_matrix(n_row_C, n_col_C);
   
   float ** new_A = allocate_matrix(n_row_A, n_col_A);
   float ** new_B =  allocate_matrix(n_row_B, n_col_B);
 
+ //embed A and B into bigger matrices
   
+    //printf("g = %ld",g);
+    for(size_t l =0;l <i;l++){
+        for(size_t f = 0; f <k; f++){ 
+            new_A[l][f] = A[l][f];
+        }
+    }
+  
+
+  /*
   //embed A and B into bigger matrices
   for(size_t g = 0;g<(k/i+1);g++){
     //printf("g = %ld",g);
@@ -352,6 +362,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
      
     }
   }
+  */
      printf("\n MATRIX A \n");
     for(size_t l =0;l <n_row_A;l++){
       printf(">");
@@ -362,7 +373,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
     }
     printf("\n");
     
-  
+  /*
   for(size_t h = 0;h<(j/i+1);h++){
     //printf("\n h = %ld,..,%ld\n",h,j/i+1);
     for(size_t g = 0;g<(k/i+1);g++){
@@ -406,6 +417,15 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
           
     }
   }
+   */
+    for(size_t l =0;l <k;l++){
+        for(size_t f = 0; f <j; f++){ 
+            new_B[l][f] = B[l][f];
+        }
+    }
+  
+
+
      printf("\n MATRIX B \n");
     for(size_t l =0;l <n_row_B;l++){
       printf(">");
@@ -425,47 +445,52 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
   for (size_t f = 0 ;f<(j/n_row_A+1); f++){
     for (size_t l = 0;l<(k/n_row_A+1); l++){
       strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
-               0, f*n_row_C,
+               0, 0,
                0, l*n_row_A,
                l*n_row_A, f*n_row_A,
                n_row_A);
-      for(size_t g =0 ;g<n_row_C;g++){
-       for(size_t h = 0; h <n_col_A; h++){
-          if(f*n_row_A+h < n_col_C)
-           new_C_2[g+l*n_row_A][f*n_row_A+h] = new_C_2[g+l*n_row_A][f*i + h] + new_C[g][f*n_row_A+h];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
+
+      /*
+      for(size_t g =0 ;g<i;g++){
+       for(size_t h = 0; h <i; h++){
+          if(f*n_row_A+h<j){
+           //float v =  new_C[g][h];
+           float v = 1;}
+             //C[g][f*n_row_A+h] = C[g][f*i + h] + new_C[g][f];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
+            
       }
     
       }
-    /*for(size_t g =0 ;g<i;g++){
+      */
+    for(size_t g =0 ;g<i;g++){
        for(size_t h = 0; h <j; h++){
           if(f*i + h < j)
            C[g][f*i + h] = C[g][f*i + h] + new_C[g][h];//we perform there the summation to obtain the complete C, so we can perform more operations on the same matrix C_{1j}
       }
     
       }
-      */
+      
     }
   } 
      
   //retrieve C 
     
-      /*          
+    /*          
   for(size_t l =0 ;l<i;l++){
     for(size_t f = 0; f <j; f++){
       C[l][f] = new_C[l][f]; 
     }
   }
    */
-   /*
-    for(size_t l =0;l <n_row_A;l++){
+    for(size_t l =0;l <i;l++){
       printf(">");
-      for(size_t f = 0; f <n_row_A; f++){ 
-          printf("|%f",new_C[l][f]);
+      for(size_t f = 0; f <j; f++){ 
+          printf("|%f",C[l][f]);
        }
        printf("\n");
     }
     printf("\n");
-    */
+    
    /*
    for(size_t l =0;l <i;l++){
       printf(">");
@@ -484,7 +509,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
        printf("\n");
     }
     printf("\n");*/
-    printf("\n i = %ld , C(1,1) = %f \n",i,new_C_2[0][0]);
+    printf("\n i = %ld , C(1,1) = %f \n",i,C[0][0]);
     /*
     for(size_t l =0;l <n_row_C;l++){
       printf(">");

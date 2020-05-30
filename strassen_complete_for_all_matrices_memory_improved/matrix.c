@@ -54,7 +54,10 @@ size_t give_memory_usage(){
 
   return memory_usage;
 }
+void reset_memory_usage(size_t default_memory){
 
+ memory_usage = default_memory;
+}
 void deallocate_matrix(float **A, const size_t rows) {
   for (size_t i = 0; i < rows; i++) {
     free(A[i]);

@@ -10,7 +10,7 @@ int same_matrix(float const *const *const A, float const *const *const B,
 
 
 size_t give_memory_usage();
-
+void reset_memory_usage(size_t default_memory);
 float **allocate_matrix(const size_t rows, const size_t cols);
 
 

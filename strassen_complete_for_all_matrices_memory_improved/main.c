@@ -16,6 +16,15 @@ int main(int argc, char *argv[]) {
   float **C0 = allocate_matrix(i, j);
   float **C1 = allocate_matrix(i, j);
   
+    printf("\nC MATRIX\n");
+    for (size_t q = 0; q<i; q++){
+        for (size_t w = 0 ; w<j;w++){
+            printf("|%f",C1[q][w]);
+        }
+    printf("\n");
+    }
+
+    
   printf("n\t     Strassen's Alg.\tNaive Alg.   Same result  , memory usage\n");
  
   printf("%ld,%ld,%ld\t", i,k,j);
@@ -31,6 +40,7 @@ int main(int argc, char *argv[]) {
                                (float const *const *const)C1, i, j), give_memory_usage());
    
   printf("\nCOMPARE  %f   %f\n",C0[i-1][j-1],C1[i-1][j-1]);
+  printf("\n C0: %f  C1: %f  \n",C0[0][64],C1[0][64]);
   deallocate_matrix(A, i);
   deallocate_matrix(B, k);
   deallocate_matrix(C0, i);

@@ -55,3 +55,10 @@ The result is:
         nd23@nd23-VirtualBox:~/Adv_algorithms/AD_HW_02/strassen_complete_for_all_matrices_memory_improved$ ./strassen_test
         n            Strassen's Alg.    Naive Alg.   Same result  , memory usage
         125,250,200     0.016631        0.009019        1           4345424 bytes
+
+30/05/2020
+A little modification saved more space:
+
+        nd23@nd23-VirtualBox:~/Adv_algorithms/AD_HW_02/strassen_complete_for_all_matrices_memory_improved$ ./strassen_test
+        n            Strassen's Alg.    Naive Alg.   Same result  , memory usage
+        123,250,200      0.018793        0.012832        1           4213328 bytes

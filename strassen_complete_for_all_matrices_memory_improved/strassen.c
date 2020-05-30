@@ -124,6 +124,21 @@ void strassen_aux(float **C, float const *const *const A,
                  A_f_row, A_f_col,
                  0, 0,
                  n2);
+    // C12 = C12 + P1
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[0],
+                      C_f_row, C_f_col+n2,
+                      C_f_row, C_f_col+n2,
+                      0, 0,
+                      n2);
+
+    // C22 = C22 + P1
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[0],
+                      C_f_row+n2, C_f_col+n2,
+                      C_f_row+n2, C_f_col+n2,
+                      0, 0,
+                      n2);
 
     // S2 = A11 + A12
     sum_matrix_blocks(S[1], A, A,
@@ -139,7 +154,21 @@ void strassen_aux(float **C, float const *const *const A,
                  0, 0,
                  B_f_row + n2, B_f_col + n2,
                  n2);
-
+    //C11 = C11 - P2
+    sub_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[1],
+                      C_f_row, C_f_col,
+                      C_f_row, C_f_col,
+                      0, 0,
+                      n2);
+    // C12 = C12 + P2
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[1],
+                      C_f_row, C_f_col+n2,
+                      C_f_row, C_f_col+n2,
+                      0, 0,
+                      n2);
+    
     // S3 = A21 + A22
     sum_matrix_blocks(S[2], A, A,
                       0, 0,
@@ -153,6 +182,20 @@ void strassen_aux(float **C, float const *const *const A,
                  0, 0,
                  B_f_row, B_f_col,
                  n2);
+     // C22 = C22 - P3 
+    sub_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[2],
+                      C_f_row+n2, C_f_col+n2,
+                      C_f_row+n2, C_f_col+n2,
+                      0, 0,
+                      n2);
+    // C21 = C21 + P3 
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[2],
+                      C_f_row+n2, C_f_col,
+                      C_f_row+n2, C_f_col,
+                      0, 0,
+                      n2);
 
     // S4 = B21 - B11
     sub_matrix_blocks(S[3], B, B,
@@ -167,7 +210,21 @@ void strassen_aux(float **C, float const *const *const A,
                  A_f_row + n2, A_f_col + n2,
                  0, 0,
                  n2);
+    //C11 = C11 + P4
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[3],
+                      C_f_row, C_f_col,
+                      C_f_row, C_f_col,
+                      0, 0,
+                      n2);
 
+    // C21 = C21 + P4
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[3],
+                      C_f_row+n2, C_f_col,
+                      C_f_row+n2, C_f_col,
+                      0, 0,
+                      n2);
     // S5 = A11 + A22
     sum_matrix_blocks(S[4], A, A,
                       0, 0,
@@ -189,7 +246,20 @@ void strassen_aux(float **C, float const *const *const A,
                  0, 0,
                  0, 0,
                  n2);
-
+    //C11 = C11 + P5
+     sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[4],
+                      C_f_row, C_f_col,
+                      C_f_row, C_f_col,
+                      0, 0,
+                      n2);
+    // C22 = C22 + P5 
+     sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[4],
+                      C_f_row+n2, C_f_col+n2,
+                      C_f_row+n2, C_f_col+n2,
+                      0, 0,
+                      n2);
     // S7 = A12 - A22
     sub_matrix_blocks(S[6], A, A,
                       0, 0,
@@ -211,7 +281,13 @@ void strassen_aux(float **C, float const *const *const A,
                  0, 0,
                  0, 0,
                  n2);
-
+    //C11 = C11 + P6
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[5],
+                      C_f_row, C_f_col,
+                      C_f_row, C_f_col,
+                      0, 0,
+                      n2);
     // S9 = A11 - A21
     sub_matrix_blocks(S[8], A, A,
                       0, 0,
@@ -233,79 +309,14 @@ void strassen_aux(float **C, float const *const *const A,
                  0, 0,
                  0, 0,
                  n2);
-
-    // C11 = P5 + P4 - P2 + P6
-    sum_matrix_blocks(C, (const float* const *const) P[4],
-                      (const float* const *const) P[3],
-                      C_f_row, C_f_col,
-                      0, 0,
-                      0, 0,
-                      n2);
-    sub_matrix_blocks(C, (const float* const *const) C,
-                      (const float* const *const) P[1],
-                      C_f_row, C_f_col,
-                      C_f_row, C_f_col,
-                      0, 0,
-                      n2);
-    sum_matrix_blocks(C, (const float* const *const) C,
-                      (const float* const *const) P[5],
-                      C_f_row, C_f_col,
-                      C_f_row, C_f_col,
-                      0, 0,
-                      n2);
-
-    // C12 = P1 + P2
-    printf ("---------------------");
-    printf("\n before %f  + %f  = %f should be %f  \n",P[0][0][0],P[1][0][0],C[C_f_row][C_f_col+n2],P[0][0][0]+P[1][0][0]);
-    sum_matrix_blocks(C, (const float* const *const) C,
-                      (const float* const *const) P[0],
-                      C_f_row, C_f_col+n2,
-                      C_f_row, C_f_col+n2,
-                      0, 0,
-                      n2);
-    sum_matrix_blocks(C, (const float* const *const) C,
-                      (const float* const *const) P[1],
-                      C_f_row, C_f_col+n2,
-                      C_f_row, C_f_col+n2,
-                      0, 0,
-                      n2);
-    printf("\n after %f  + %f  = %f should be  %f \n",P[0][0][0],P[1][0][0],C[C_f_row][C_f_col+n2],P[0][0][0]+P[1][0][0]);
-   
-     /*sum_matrix_blocks(C, (const float* const *const) C,
-                      (const float* const *const) P[1],
-                      C_f_row, C_f_col+n2,
-                      C_f_row, C_f_col+n2,
-                      0, 0,
-                      n2);
-   */
-    // C21 = P3 + P4
-    sum_matrix_blocks(C, (const float* const *const) P[2],
-                      (const float* const *const) P[3],
-                      C_f_row+n2, C_f_col,
-                      0, 0,
-                      0, 0,
-                      n2);
-
-    // C22 = P5 + P1 - P3 - P7
-    sum_matrix_blocks(C, (const float* const *const) P[4],
-                      (const float* const *const) P[0],
-                      C_f_row+n2, C_f_col+n2,
-                      0, 0,
-                      0, 0,
-                      n2);
-    sub_matrix_blocks(C, (const float* const *const) C,
-                      (const float* const *const) P[2],
-                      C_f_row+n2, C_f_col+n2,
-                      C_f_row+n2, C_f_col+n2,
-                      0, 0,
-                      n2);
+    // C22 = C22 - P7
     sub_matrix_blocks(C, (const float* const *const) C,
                       (const float* const *const) P[6],
                       C_f_row+n2, C_f_col+n2,
                       C_f_row+n2, C_f_col+n2,
                       0, 0,
-                      n2);
-    
+                      n2);             
+
     for (size_t i = 0; i < 10; i++) {
       deallocate_matrix(S[i], n2);
     }
@@ -365,14 +376,7 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
  //Perform the matrix multiplications between square matrices                              
   for (size_t f = 0 ;f<n_block_col_B; f++){
     for (size_t l = 0;l<n_block_col_A; l++){
-        printf("\nC MATRIX\n");
-    for (size_t q = 0; q<n_row_A; q++){
-        for (size_t w = 0 ; w<n_row_A;w++){
-            printf("|%f",new_C[q][w]);
-        }
-    printf("\n");
-  }
-       
+      
 
       strassen_aux(new_C,(float const *const *const) new_A,(float const *const *const)  new_B,
                0, 0,

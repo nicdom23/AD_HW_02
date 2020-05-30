@@ -1,3 +1,5 @@
+////666
+
 #include "matrix.h"
 #include <stdio.h>
 /*
@@ -324,6 +326,7 @@ void strassen_matrix_multiplication_square(float **C, float const *const *const 
     }
     
   }
+
   //use the original Strassen method on the now square matrices that have a size corresponding to a power of two
   strassen_aux(new_C,(float const *const *const)  new_A,(float const *const *const)  new_B,
                0, 0,

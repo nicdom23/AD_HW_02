@@ -67,7 +67,7 @@ float **allocate_random_matrix(const size_t rows, const size_t cols) {
   srand(10);
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < cols; j++) {
-      A[i][j] =  (rand() - RAND_MAX / 2) % 5;
+      A[i][j] =  j+i+1;//(rand() - RAND_MAX / 2) % 5;
     }
   }
 

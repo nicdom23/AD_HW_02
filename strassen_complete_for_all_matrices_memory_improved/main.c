@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   printf("%d  \t    %ld bytes\n", same_matrix((float const *const *const)C0,
                                (float const *const *const)C1, i, j), give_memory_usage());
    
-  
+  printf("\nCOMPARE  %f   %f\n",C0[i-1][j-1],C1[i-1][j-1]);
   deallocate_matrix(A, i);
   deallocate_matrix(B, k);
   deallocate_matrix(C0, i);

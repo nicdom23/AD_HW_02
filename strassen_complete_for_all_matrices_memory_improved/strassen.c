@@ -122,6 +122,23 @@ void strassen_aux(float **C, float const *const *const A,
                  0, 0,
                  n2);
 
+    //C22=C22+P1
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[0],
+                      C_f_row+n2, C_f_col+n2,
+                      C_f_row+n2, C_f_col+n2,
+                      0, 0,
+                      n2);
+    //C12=C12+P1
+    /*sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P [0],
+                      C_f_row, C_f_col+n2,
+                      C_f_row, C_f_col+n2,
+                      0, 0,
+                      n2);
+    */
+
+
     // S2 = A11 + A12
     sum_matrix_blocks(S[1], A, A,
                       0, 0,
@@ -136,6 +153,21 @@ void strassen_aux(float **C, float const *const *const A,
                  0, 0,
                  B_f_row + n2, B_f_col + n2,
                  n2);
+    //C11 = C11+P2
+    sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[1],
+                      C_f_row, C_f_col,
+                      C_f_row, C_f_col,
+                      0, 0,
+                      n2);
+    //C12 = C12 + P2
+    /*sum_matrix_blocks(C, (const float* const *const) C,
+                      (const float* const *const) P[1],
+                      C_f_row, C_f_col+n2,
+                      C_f_row, C_f_col+n2,
+                      0, 0,
+                      n2);
+    */               
 
     // S3 = A21 + A22
     sum_matrix_blocks(S[2], A, A,
@@ -251,13 +283,6 @@ void strassen_aux(float **C, float const *const *const A,
                       0, 0,
                       n2);
 
-    // C12 = P1 + P2
-    sum_matrix_blocks(C, (const float* const *const) P[0],
-                      (const float* const *const) P[1],
-                      C_f_row, C_f_col+n2,
-                      0, 0,
-                      0, 0,
-                      n2);
 
     // C21 = P3 + P4
     sum_matrix_blocks(C, (const float* const *const) P[2],

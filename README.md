@@ -18,5 +18,8 @@ Nicola Domenis
 30/02/2020
 
 I have finished the exercise, I will now leave this repository and go on with the homework.
+You will have access to all the modifications I made of course, I hope that this proves my efforts, I do not know if I did a good job by doing a two hours exercise in three days...
+However thankfully it's done.
+Cordially,
 
 Nicola Domenis

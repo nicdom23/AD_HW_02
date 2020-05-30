@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "matrix.h"
-
 void naive_matrix_multiplication(float **C, float const *const *const A,
                                 float const *const *const B,
                                 const size_t i,const size_t k,const size_t j) 
@@ -23,6 +22,9 @@ int same_matrix(float const *const *const A, float const *const *const B,
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < cols; j++) {
       if (A[i][j] != B[i][j]) {
+        //printf("\nFALSE %ld  %ld\n",i,j);
+        //printf("\n C0: %f  C1: %f  \n",A[i][j],B[i][j]);
+        
         return 0;
       }
     }
@@ -30,7 +32,7 @@ int same_matrix(float const *const *const A, float const *const *const B,
 
   return 1;
 }
-
+static size_t memory_usage = 0;
 float **allocate_matrix(const size_t rows, const size_t cols) {
   float **M = (float **)malloc(sizeof(float *) * rows);
 
@@ -41,12 +43,21 @@ float **allocate_matrix(const size_t rows, const size_t cols) {
     for(size_t j = 0; j < cols; j++){
       M[i][j] = 0;
     }
-
+   
 
   }
+  memory_usage = memory_usage + sizeof(float*) * rows + rows*sizeof(float) * cols;
   return M;
 }
 
+size_t give_memory_usage(){
+
+  return memory_usage;
+}
+void reset_memory_usage(size_t default_memory){
+
+ memory_usage = default_memory;
+}
 void deallocate_matrix(float **A, const size_t rows) {
   for (size_t i = 0; i < rows; i++) {
     free(A[i]);
@@ -62,7 +73,7 @@ float **allocate_random_matrix(const size_t rows, const size_t cols) {
   srand(10);
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < cols; j++) {
-      A[i][j] = (rand() - RAND_MAX / 2) % 5;
+      A[i][j] =  (rand() - RAND_MAX / 2) % 5;
     }
   }
 

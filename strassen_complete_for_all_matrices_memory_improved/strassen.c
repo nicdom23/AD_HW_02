@@ -390,7 +390,6 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
   
   //create new matrices
   float ** new_C = allocate_matrix(n_row_A, n_row_A);
-  //float ** new_C_2 = allocate_matrix(n_row_C, n_col_C);
   float ** new_A =  allocate_matrix(n_row_A, n_col_A);
   float ** new_B =  allocate_matrix(n_row_B, n_col_B);
     
@@ -431,20 +430,11 @@ void strassen_matrix_multiplication(float **C, float const *const *const A,
         }
       }
    }
-    
-    
-  //retrieve C        
-  /*for(size_t l =0 ;l<i;l++){
-    for(size_t f = 0; f <j; f++){
-      C[l][f] = new_C_2[l][f]; 
-    }
-  }*/
   
   //free the memory
   deallocate_matrix(new_A, n_row_A);
   deallocate_matrix(new_B, n_row_B);
   deallocate_matrix(new_C, n_row_A);
-  //deallocate_matrix(new_C_2, n_row_C);
   
  }                                   
                                     

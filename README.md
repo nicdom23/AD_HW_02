@@ -14,3 +14,9 @@ I also hope that you will have time to give a glance to the README files I produ
 Cordially,
 
 Nicola Domenis
+--------------------------------------------------------
+30/02/2020
+
+I have finished the exercise, I will now leave this repository and go on with the homework.
+
+Nicola Domenis
